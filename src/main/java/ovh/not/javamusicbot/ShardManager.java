@@ -6,10 +6,12 @@ import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
+import ovh.not.javamusicbot.rpc.Rpc;
 
 import javax.security.auth.login.LoginException;
 
 public class ShardManager {
+    private final Rpc rpc;
     public final Shard[] shards;
     public UserManager userManager = null;
 
@@ -19,6 +21,7 @@ public class ShardManager {
         if (config.patreon) {
             userManager = new UserManager(config, this);
         }
+        this.rpc = null;
     }
 
     ShardManager(Config config, Constants constants, int shardCount, int minShard, int maxShard) {
@@ -34,6 +37,7 @@ public class ShardManager {
         if (config.patreon) {
             userManager = new UserManager(config, this);
         }
+        this.rpc = new Rpc(config, this);
     }
 
     public Guild getGuild(String id) {

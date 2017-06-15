@@ -18,4 +18,7 @@ public class Config {
     String supporterRole;
     String superSupporterRole;
     String superDuperSupporterRole;
+    public String master;
+    public int masterPort;
+    public String masterKey;
 }

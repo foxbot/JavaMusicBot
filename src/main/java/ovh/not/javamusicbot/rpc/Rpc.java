@@ -24,6 +24,7 @@ public class Rpc {
     }
 
     public void connect() throws IOException {
+	System.out.println("RPC init");
         this.socket = new Socket(config.master, config.masterPort);
         Thread thread = new Thread(() -> {
             try {
@@ -36,11 +37,15 @@ public class Rpc {
         sendIdentify();
     }
 
-    void runLoop() throws IOException {
+    void runLoop() throws IOException, InterruptedException {
         while(true) {
 
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
                 String content = reader.readLine();
+		if (content.equals(null)) {
+			System.out.println("RPC down ; connection refused");
+			break;
+		}
                 Message message = gson.fromJson(content, Message.class);
                 switch (message.op) {
                     case 1: {
@@ -62,6 +67,8 @@ public class Rpc {
                 break;
             }
         }
+	System.out.println("RPC down .. reconnecting");
+	Thread.sleep(3000);
         connect();
     }
     void sendIdentify() throws IOException {

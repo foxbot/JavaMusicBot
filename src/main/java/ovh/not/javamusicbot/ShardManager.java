@@ -21,7 +21,8 @@ public class ShardManager {
         if (config.patreon) {
             userManager = new UserManager(config, this);
         }
-        this.rpc = null;
+        this.rpc = new Rpc(config, this);
+	connectRpc();
     }
 
     ShardManager(Config config, Constants constants, int shardCount, int minShard, int maxShard) {
@@ -38,6 +39,16 @@ public class ShardManager {
             userManager = new UserManager(config, this);
         }
         this.rpc = new Rpc(config, this);
+	connectRpc();
+    }
+
+    private void connectRpc() {
+	try {
+		this.rpc.connect();
+	} catch (Exception e) {
+		e.printStackTrace();
+		System.out.println("rpc fatal");
+	}
     }
 
     public Guild getGuild(String id) {
